@@ -6,7 +6,7 @@ interface TodoProps {
   isCompleted: boolean;
 };
 
-const initialState = new Array<TodoProps> (
+/* const initialState = new Array<TodoProps> (
     {
       description: 'Learn about reducers',
       isCompleted: false,
@@ -17,7 +17,7 @@ const initialState = new Array<TodoProps> (
       isCompleted: false,
       id: 3892987580
     }
-)
+) */
 
 
 // const initialState = { count: 0 } 
@@ -27,14 +27,17 @@ const initialState = new Array<TodoProps> (
 function reducer(state: Array<TodoProps>, action: { type: any, payload: TodoProps }) {
   switch (action.type) {
     case 'save_post':
-      return new Array<TodoProps>(...state, action.payload)
+      const new_add_state = new Array<TodoProps>(...state, action.payload)
+      localStorage.setItem('todos', JSON.stringify(new_add_state));
+      return new_add_state
     case 'finish_post':
       //const index = state.indexOf(action.payload);
       //console.log(index)
       //state.splice(index, 1)
 
-      const new_state = state.map(x => (x.id === action.payload.id) ? {id: x.id, description: x.description, isCompleted: !x.isCompleted} : x)
-      return new Array<TodoProps>(...new_state)
+      const new_update_state = state.map(x => (x.id === action.payload.id) ? {id: x.id, description: x.description, isCompleted: !x.isCompleted} : x)
+      localStorage.setItem('todos', JSON.stringify(new_update_state));
+      return new Array<TodoProps>(...new_update_state)
     default:
       return state;
   }
@@ -42,7 +45,8 @@ function reducer(state: Array<TodoProps>, action: { type: any, payload: TodoProp
 
 function Counter() {
     const [descriptionText, setDescriptionText] = useState("")
-    const [state, dispatch] = useReducer(reducer, initialState)
+    const todojson = JSON.parse(localStorage.getItem("todos") || "[]")
+    const [state, dispatch] = useReducer(reducer, todojson)
 
     const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
       const newValue = event.currentTarget.value;
