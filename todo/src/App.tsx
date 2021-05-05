@@ -1,26 +1,28 @@
-// import logo from './logo.svg';
-import './App.css';
-import Counter from './reducers/reducer'
+import { useState } from 'react';
+import Todos from './reducers/reducer'
+import '../node_modules/material-components-web/dist/material-components-web.css'
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 
-function App() {
+interface Props {}
+
+const App: React.FC<Props> = () => {
+  const [frontend, setFrontend] = useState("material")
+
+  function setFrontEnd(event: React.FormEvent<HTMLSelectElement>){
+    setFrontend(event.currentTarget.value)
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-       */}
-        <Counter />
-      </header>
+    <div>
+      <select onChange={(event: React.FormEvent<HTMLSelectElement>)=>setFrontEnd(event)} style={{position: 'absolute'}} name="frontend" id="frontend">
+        <option value="material">Material Design</option>
+        <option value="bootstrap">Bootstrap</option>
+        <option value="ant">Ant</option>
+        <option value="tailwind">Tailwind</option>
+      </select>
+
+      <div className="App">
+        <Todos frontend={frontend} />
+      </div>
     </div>
   );
 }
